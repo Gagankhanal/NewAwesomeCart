@@ -1,0 +1,51 @@
+{% extends 'shop/basic.html' %}
+{% block css %}
+  .about{
+    background-image: url('/static/shop/shopingcart.jpg');
+     background:linear-gradient(to right,rgb(15, 15, 15) 0%,rgb(175, 226, 192) 0%,#222224 100%) ;
+}
+
+{% endblock%}
+{% block title %}  about us{% endblock %}
+{% block body %}
+ <div class="container-fluid bg-light about ">
+     <div class="row col-md-8 offset-md-2 ">
+            <h1 class="mt-5 display-3 text-info " >New Awesome Cart!</h1>
+            <p class="text-white">New Awesome Cart is an Nepali e-commerce company, headquartered in BUtwal, Golpark, and
+                incorporated in Singapore as a private limited company.[7] The company initially focused on
+                online book sales before expanding into other product categories such as consumer electronics,
+                fashion, home essentials, groceries, and lifestyle products. The service competes primarily
+                with Amazon's Indian subsidiary and domestic rival Snapdeal. It is established in 6 june 2021
+                New Awesome cart held a 39.5% market share of India's e-commerce industry.[10] New Awesome Cart has a
+                dominant position in the apparel segment, bolstered by its acquisition of Myntra, and was
+                described as being "neck and neck" with Amazon in the sale of electronics and mobile phones.
+                [11] New Awesome Cart also owns PhonePe, a mobile payments service based on the Unified Payments Interface.</p>
+            <p class="mb-5"><a class="btn btn-danger" href="#">Learn more &raquo;</a></p>
+     </div>
+</div>
+     <section class=" header-extradiv">
+         <div class="container ">
+              <div class=" text-center">
+                <h3 class="my-4">Our works</h3>
+                <hr class="thick-border  ">
+             </div>
+          <div class="row col-md-10 offset-md-1">
+            <div class="extradiv col-md-4 "><a href="#"><i class="fa fa-4x        fa-desktop " aria-hidden="true"></i></a>
+                 <h3 class="my-4">High coverage</h3>
+                 <p class="text-muted">Reach among the widest range of jobseekers, receive the targeted applications instantly and sort the best probables.</p>
+               </div>
+
+               <div class="extradiv  col-md-4 "><a href="#"><i class="fa fa-4x fa-handshake-o" aria-hidden="true"></i></a>
+                <h3 class="my-4">Hire Employ</h3>
+                <p class="text-muted">The best you found through merojob will take your organization to newer heights.</p>
+              </div>
+
+              <div class="extradiv  col-md-4 "><a href="#"><i class="fa fa-4x fa-check-circle" aria-hidden="true"></i></a>
+                <h3 class="my-4">Post job and CV</h3>
+                <p class="text-muted">Make a wish and we will help to publish the job or choose our recruitment packages.</p>
+              </div>
+            </div>
+         </div>
+      </section>
+
+{% endblock %}

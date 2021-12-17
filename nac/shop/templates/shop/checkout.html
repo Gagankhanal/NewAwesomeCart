@@ -1,0 +1,128 @@
+{% extends 'shop/basic.html' %}
+{% block title %}  checkout - my Awesome Cart{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col-md-8 offset-md-2 my-4">
+        <h5>Step 1 - My Awesome Cart Express Checkout- Review your Cart Items</h5>
+        <ol class="list-group list-group-numbered my-3" id="items">
+
+        </ol>
+         <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mt-3">
+                    <li class="breadcrumb-item active" aria-current="page"><p>Your Cart Total Is <b>Rs.<span id="totalPrice"> </span></b> Enter your details below & place your order. Thanks for using New Awesome Cart!</p></li>
+                </ol>
+         </nav>
+    </div>
+
+     <div class="col-md-8 offset-md-2 my-4">
+        <h5>Step 2 - Address and other details</h5>
+        <form class="row g-3" method="post" action="/shop/checkout/"> {% csrf_token %}
+            <input type="hidden" name="itemsJson" id="itemsJson">
+             <input type="hidden" name="amount" id="amount">
+             <div class="col-md-6">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="col-md-6">
+                 <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email">
+            </div>
+
+           <div class="col-12">
+                   <label for="address1" class="form-label">Address</label>
+                  <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
+            </div>
+           <div class="col-12">
+                   <label for="address2" class="form-label">Address line 2</label>
+                   <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
+           </div>
+            <div class="col-md-6">
+                    <label for="city" class="form-label">City</label>
+                   <input type="text" class="form-control" id="city" name="city" >
+            </div>
+            <div class="col-md-4">
+                     <label for="state" class="form-label">State</label>
+                       <input type="text" class="form-control" id="state" name="state">
+            </div>
+            <div class="col-md-2">
+                       <label for="zip_code" class="form-label">Zip</label>
+                       <input type="text" class="form-control" id="zip_code" name="zip_code">
+             </div>
+               <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone no</label>
+                        <input type="phone" class="form-control" id="phone" name="phone">
+               </div>
+
+
+            <div class="col-12">
+                     <button type="submit" class="btn btn-primary">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    if(localStorage.getItem('cart')==null){
+    var cart={}
+    }
+    else{
+    cart=JSON.parse(localStorage.getItem('cart'))
+      document.getElementById('bCart').innerHTMl=Object.keys(cart).length;
+    }
+
+    var sum=0;
+    var totalprice=0
+    if ($.isEmptyObject(cart)){
+    myStr=`  <p class="text-muted">Please! add to cart some items before checkout</p>`
+    $('#items').append(myStr);
+    }
+    else{
+    for(var item in cart){
+    let qty=cart[item][0];
+    let name=cart[item][1];
+    let itemprice=cart[item][2];
+    sum=sum+ qty
+    totalprice= totalprice + qty * itemprice;
+    myStr=`  <li class="list-group-item d-flex justify-content-between align-items-start">
+               ${name}
+             <span class="badge bg-primary rounded-pill">${qty}</span>
+           </li>`
+    $('#items').append(myStr);
+    }
+    document.getElementById('bCart').innerHTML = sum;
+     document.getElementById('totalPrice').innerHTML = totalprice;
+}
+
+ $('.mdlCart').click(function(){
+ console.log('cart is clicked')
+ updateModel(cart);
+  function updateModel(cart){
+  console.log("we are inside updateModel");
+    var popStr="";
+    popStr=popStr + "<h5>Cart for your item in my shopping cart</h5><div class=' mx-4 my-2'>"
+    var i=1;
+    for( item in cart){
+    popStr=popStr + "<b>" + i + "</b>.";
+    popStr=popStr + cart[item][1] + "quantity ......." + cart[item][0] +"<br>";
+    i=i+1;
+    }
+     popStr=popStr + "</div><a href='/shop/checkout'><button id='checkout' class='btn btn-primary mx-2' >Checkout </button></a><button id='clearcart' class='clearcart btn mx-2 btn-primary' onclick='clearCart()'>Clearcart</button>"
+    document.getElementById('mContent').innerHTML = popStr;
+  }
+  })
+
+$('#amount').val($('#totalPrice').html())
+
+ $('#itemsJson').val(JSON.stringify(cart));
+
+ {% if thank%}
+ alert('Thanks for ordering with us. Your order id is {{id}} use it to track your order using the order tracker')
+  localStorage.clear();
+  document.location="/shop"
+  {% endif %}
+
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'shop/basic.html' %}
+{% block title %} My Awesome Cart Tracker{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col-md-8 offset-md-2 my-4">
+        <h5>  Enter your Order id and Email address to track your order</h5>
+         <form class="row g-3" method="post" action="#" id="trackerForm"> {% csrf_token %}
+            <input type="hidden" name="itemsJson" id="itemsJson">
+             <div class="col-md-6">
+                  <label for="orderId" class="form-label">Order id</label>
+                  <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order id">
+            </div>
+
+             <div class="col-md-6">
+                 <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email">
+            </div>
+
+            <div class="col-12">
+                     <button type="submit" class="btn btn-primary track">Track Order</button>
+            </div>
+         </form>
+    </div>
+
+     <div class="col-md-8 offset-md-2 my-4">
+        <h5>Your order status</h5>
+            <ol class="list-group list-group-numbered my-3" id="items">
+                Enter your order Id and Email and click Track Order to find details about your order!
+            </ol>
+     </div>
+
+    <div class="col-md-8 offset-md-2 my-4">
+     <h5>Your order Details</h5>
+            <ol class="list-group list-group-numbered my-3" id="citems">
+            </ol>
+     </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+if(localStorage.getItem('cart')==null){
+    var cart={}
+    }
+    else{
+    cart=JSON.parse(localStorage.getItem('cart'))
+      document.getElementById('bCart').innerHTMl=Object.keys(cart).length;
+    }
+
+$('#trackerForm').submit(function(event) {
+    $('#items').empty();
+    var formData = {
+        'orderId': $('input[name=orderId]').val(),
+        'email': $('input[name=email]').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+
+
+        .done(function(data) {
+          $('#citems').empty();
+            console.log(data)
+            data=JSON.parse(data);
+            if ( data['status']=='success') {
+                updates = data['updates'];
+                for (i = 0; i < updates.length; i++) {
+                    let text = updates[i]['text'];
+                    let time = updates[i]['time'];
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${text}
+                    <span class="badge bg-primary rounded-pill">${time}</span>
+                </li>`
+                    $('#items').append(mystr);
+                }
+
+                 //fill in the other details
+                 cart=JSON.parse(data['itemsJson']);
+                 console.log(cart)
+                   for(var item in cart){
+                   let name=cart[item][1];
+                   let qty=cart[item][0];
+                   myStr=`  <li class="list-group-item d-flex justify-content-between align-items-start">
+                              ${name}
+                            <span class="badge bg-primary rounded-pill">${qty}</span>
+                           </li>`
+                   $('#citems').append(myStr);
+                  }
+            } else {
+            	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    Sorry, We are not able to fetch this order id and email. Make sure to type correct order Id and email</li>`
+            	$('#items').append(mystr);
+            }
+
+        });
+    event.preventDefault();
+});
+
+
+ $('.track').click(function(){
+ console.log('track us button is clicked')
+ var sum=0;
+ for( var item in cart){
+ sum=sum + cart[item][0];
+ document.getElementById('bCart').innerHTML =sum;
+ }
+ });
+</script>
+{% endblock %}

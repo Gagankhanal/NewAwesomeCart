@@ -1,0 +1,55 @@
+{% extends 'shop/basic.html' %}
+{% block title %}  {{product.product_name}}-My Awesome Cart{% endblock %}
+{% block body %}
+ <div class="container my-4">
+     <div class="row">
+         <div class="col-md-4">
+             <div class="row px-4">
+                  <img src="/media/{{product.image}}" height="350px" width="200px">
+             </div>
+                    <button class="btn btn-primary  my-2 mx-4">Buy Now</button>
+                    <button class="btn btn-primary">Add to Cart</button>
+         </div>
+
+         <div class="col-md-6 offset-md-1 mx-4 ">
+             <h3>{{product.product_name}}</h3>
+             <p ><b>Rs: {{product.price}}</b></p>
+             <p>{{product.description}}</p>
+
+         </div>
+     </div>
+ </div>
+{% endblock %}
+{% block js %}
+<script>
+    console.log(' console is working');
+<!-- print localstorage.getItem('cart') in console if it is null then-->
+    if(localStorage.getItem('cart')==null){
+    var cart={}
+    }
+    else{
+    cart=JSON.parse(localStorage.getItem('cart'))
+      document.getElementById('bCart').innerHTMl=Object.keys(cart).length;
+    }
+    $('.cart').click(function(){   <!--its a jquery function -->
+    console.log('clicked')
+    var idStr=this.id.toString();
+<!-- this is checked to know which product item is clicked with thier id -->
+    console.log(idStr);
+<!--    print console.log(cart[idstr]) in console if itis undefined then-->
+    if(cart[idStr]== undefined){
+       cart[idStr]=1
+    }
+    else{
+        cart[idStr]=cart[idStr]+1
+   }
+   console.log(cart)
+   localStorage.setItem('cart' ,JSON.stringify(cart))
+    document.getElementById('bCart').innerHTML= Object.keys(cart).length;
+    });
+
+
+
+
+</script>
+{% endblock %}
